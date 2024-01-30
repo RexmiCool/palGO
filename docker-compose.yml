@@ -1,0 +1,29 @@
+version: "3.7"
+services:
+  boutique_service:
+    build:
+      context: ./Micro-Services/boutique-service
+    container_name: boutique-service
+    restart: always
+    ports:
+      - 4570:8080
+    networks:
+      - palgo-network
+    hostname: boutique_service
+
+  maria_db:
+    image: "mariadb:10.5.8"
+    restart: always
+    hostname: "boutique-service-db"
+    networks:
+      - palgo-network
+    environment:
+      MYSQL_DATABASE: boutique-service-db
+      MYSQL_USER: boutique-service-db
+      MYSQL_PASSWORD: XXX
+      MYSQL_ROOT_PASSWORD: XXX
+
+networks:
+  palgo-network:
+    name: palgo-network
+    driver: bridge
