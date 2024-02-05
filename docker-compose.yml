@@ -11,6 +11,23 @@ services:
       - palgo-network
     hostname: boutique_service
 
+  incubateur_service:
+    build:
+      context: ./Micro-Services/incubateur-service
+    container_name: incubateur-service
+    restart: always
+    ports:
+      - 4571:8080
+    networks:
+      - palgo-network
+    hostname: incubateur_service
+
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
 networks:
   palgo-network:
     name: palgo-network
