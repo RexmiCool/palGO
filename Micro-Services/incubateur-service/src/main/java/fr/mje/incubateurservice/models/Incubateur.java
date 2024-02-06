@@ -7,18 +7,16 @@ public class Incubateur {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    private Integer eggId;
     private Integer incubingTime;
     private Boolean isIncubing;
-    private Integer UID;
+    private Integer uid;
 
-    public Incubateur(Integer incubingTime, Boolean isIncubing) {
-        this.incubingTime = incubingTime;
-        this.isIncubing = isIncubing;
+    public Incubateur(Integer uid) {
+        this.uid = uid;
+        this.isIncubing = false;
     }
 
     public Incubateur() {
-
     }
 
     public void randomBoutique(){
@@ -27,14 +25,6 @@ public class Incubateur {
 
     public Integer getId() {
         return id;
-    }
-
-    public Integer getEggId() {
-        return eggId;
-    }
-
-    public void setEggId(Integer eggId) {
-        this.eggId = eggId;
     }
 
     public Integer getIncubingTime() {
@@ -54,11 +44,11 @@ public class Incubateur {
     }
 
     public Integer getUID() {
-        return UID;
+        return uid;
     }
 
     public void setUID(Integer UID) {
-        this.UID = UID;
+        this.uid = UID;
     }
 
 }

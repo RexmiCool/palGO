@@ -10,6 +10,7 @@ services:
     networks:
       - palgo-network
     hostname: boutique_service
+
   oeuf_service:
     build:
       context: ./Micro-Services/oeuf-service
@@ -20,6 +21,7 @@ services:
     networks:
       - palgo-network
     hostname: oeuf_service
+
   monstre_service:
     build:
       context: ./Micro-Services/monstre-service
