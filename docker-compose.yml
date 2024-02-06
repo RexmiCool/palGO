@@ -42,6 +42,28 @@ services:
       - palgo-network
     hostname: incubateur_service
 
+  inventaire_service:
+    build:
+      context: ./Micro-Services/inventaire-service
+    container_name: inventaire-service
+    restart: always
+    ports:
+      - 4574:8080
+    networks:
+      - palgo-network
+    hostname: inventaire_service
+
+  hero_service:
+    build:
+      context: ./Micro-Services/hero-service
+    container_name: hero-service
+    restart: always
+    ports:
+      - 4575:8080
+    networks:
+      - palgo-network
+    hostname: hero_service
+
   rabbitmq:
     image: rabbitmq:management
     ports:
