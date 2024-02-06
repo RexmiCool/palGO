@@ -10,6 +10,26 @@ services:
     networks:
       - palgo-network
     hostname: boutique_service
+  oeuf_service:
+    build:
+      context: ./Micro-Services/oeuf-service
+    container_name: oeuf-service
+    restart: always
+    ports:
+      - 4571:8080
+    networks:
+      - palgo-network
+    hostname: oeuf_service
+  monstre_service:
+    build:
+      context: ./Micro-Services/monstre-service
+    container_name: monstre-service
+    restart: always
+    ports:
+      - 4572:8080
+    networks:
+      - palgo-network
+    hostname: monstre_service
 
 networks:
   palgo-network:
