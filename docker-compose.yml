@@ -17,7 +17,7 @@ services:
     container_name: incubateur-service
     restart: always
     ports:
-      - 4571:8080
+      - 4573:8080
     networks:
       - palgo-network
     hostname: incubateur_service
