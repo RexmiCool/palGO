@@ -19,10 +19,6 @@ public class Incubateur {
     public Incubateur() {
     }
 
-    public void randomBoutique(){
-
-    }
-
     public Integer getId() {
         return id;
     }

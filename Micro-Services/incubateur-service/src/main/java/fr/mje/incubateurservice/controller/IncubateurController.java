@@ -21,16 +21,16 @@ public class IncubateurController {
 
     @GetMapping("/createIncubateur/{uid}")
     public List<Incubateur> createIncubateur(@PathVariable(value = "uid") Integer uid) {
-        if (incubateurRepository.findByUid(uid).size() < 6){
+        if (incubateurRepository.findByUid(uid).size() < 6) {
             incubateurRepository.save(new Incubateur(uid));
         }
         return incubateurRepository.findByUid(uid);
     }
 
     @GetMapping("/incubeOeuf/{uid}/{hatchTime}")
-    public List<Incubateur> incubeOeuf(@PathVariable(value = "uid") Integer uid, @PathVariable(value = "hatchTime") Integer hatchTime){
+    public List<Incubateur> incubeOeuf(@PathVariable(value = "uid") Integer uid, @PathVariable(value = "hatchTime") Integer hatchTime) {
         List<Incubateur> incubateurs = incubateurRepository.findByIsIncubing(false);
-        if (!incubateurs.isEmpty()){
+        if (!incubateurs.isEmpty()) {
             Incubateur incubateur = incubateurs.getFirst();
             incubateur.setIncubingTime(hatchTime);
             incubateur.setIsIncubing(true);
@@ -39,14 +39,4 @@ public class IncubateurController {
 
         return incubateurRepository.findByUid(uid);
     }
-
-
-
-//    @GetMapping("/oeufs/{id}")
-//    public ResponseEntity< Oeuf > getOeufById(@PathVariable(value = "id") Long oeufId)
-//            throws ResourceNotFoundException {
-//        Oeuf employee = oeufRepository.findById(oeufId)
-//                .orElseThrow(() -> new ResourceNotFoundException("Employee not found for this id :: " + oeufId));
-//        return ResponseEntity.ok().body(employee);
-//    }
 }
