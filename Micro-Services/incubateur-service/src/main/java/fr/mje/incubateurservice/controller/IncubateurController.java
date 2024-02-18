@@ -17,34 +17,47 @@ public class IncubateurController {
 
     @GetMapping("/{uid}")
     public List<Incubateur> getIncubateur(@PathVariable(value = "uid") Integer uid) {
-        if (incubateurRepository.findByUid(uid).isEmpty()) {
-            incubateurRepository.save(new Incubateur(null, 13, false, uid));
-        }
         return incubateurRepository.findByUid(uid);
     }
 
-//    @GetMapping("/{uid}")
-//    public List<Incubateur> getIncubateur(@PathVariable(value = "uid") Integer uid) {
-//        return incubateurRepository.findByUid(uid);
-//    }
+    // @PostMapping("/createIncubateur/{uid}")/
+    // public List<Incubateur> createIncubateur(@PathVariable(value = "uid") Integer uid) {
+    //     if (incubateurRepository.findByUid(uid).size() < 6) {
+    //         incubateurRepository.save(new Incubateur(uid));
+    //     }
+    //     return incubateurRepository.findByUid(uid);
+    // }
 
 
-//    @GetMapping("/generate_boutique")
-//    public List<fr.mje.incubateurservice.models.Incubateur> generate_boutique() {
-//        incubateurRepository.deleteAll();
-//        incubateurRepository.save(new fr.mje.incubateurservice.models.Incubateur());
-//        return incubateurRepository.findAll();
-//    }
+    @PostMapping("/")
+    public void add_inc(@RequestBody Incubateur incubateur) {
+        incubateurRepository.save(incubateur);
+    }
+
+    @DeleteMapping("/{id}")
+    public void remove_inc(@PathVariable(value = "id") Long incubateur_id) {
+        incubateurRepository.deleteById(incubateur_id);
+    }
 
 
 
 
 
-//    @GetMapping("/oeufs/{id}")
-//    public ResponseEntity< Oeuf > getOeufById(@PathVariable(value = "id") Long oeufId)
-//            throws ResourceNotFoundException {
-//        Oeuf employee = oeufRepository.findById(oeufId)
-//                .orElseThrow(() -> new ResourceNotFoundException("Employee not found for this id :: " + oeufId));
-//        return ResponseEntity.ok().body(employee);
-//    }
+    // @PutMapping("/incubeOeuf/{uid}/{hatchTime}")
+    // public List<Incubateur> incubeOeuf(@PathVariable(value = "uid") Integer uid, @PathVariable(value = "hatchTime") Integer hatchTime) {
+    //     List<Incubateur> incubateurs = incubateurRepository.findByIsIncubing(false);
+    //     if (!incubateurs.isEmpty()) {
+    //         Incubateur incubateur = incubateurs.getFirst();
+    //         incubateur.setIncubingTime(hatchTime);
+    //         incubateur.setIsIncubing(true);
+    //         incubateurRepository.save(incubateur);
+    //     }
+
+    //     return incubateurRepository.findByUid(uid);
+    // }
+
+    @PutMapping("/")
+    public void update_inc(@RequestBody Incubateur incubateur) {
+        incubateurRepository.save(incubateur);
+    }
 }

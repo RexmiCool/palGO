@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface IncubateurRepository extends JpaRepository<Incubateur, Long> {
     List<Incubateur> findByUid(Integer uid);
-
+    List<Incubateur> findByIsIncubing(Boolean isIncubing);
 }
