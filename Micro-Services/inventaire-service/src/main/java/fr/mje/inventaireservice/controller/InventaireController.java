@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1")
 public class InventaireController {
@@ -14,23 +15,21 @@ public class InventaireController {
     @Autowired
     private InventaireRepository inventaireRepository;
 
-    @GetMapping("/inventaire/{uid}")
+    @GetMapping("/{uid}")
     public List<Monstre> getinventaire(@PathVariable(value = "uid") Integer uid) {
         return inventaireRepository.findByUid(uid);
     }
 
-    @GetMapping("/add_monstre_inventaire/{name}/{uid}")
-    public List<Monstre> add_monstre_inventaire(@PathVariable(value = "name") String name, @PathVariable(value = "uid") Integer uid) {
-        if (inventaireRepository.findByUid(uid).size() < 5 ) {
-            inventaireRepository.save(new Monstre(name ,uid));
+    @PostMapping("/")
+    public void add_monstre_inventaire(@RequestBody Monstre monstre) {
+        if (inventaireRepository.findByUid(monstre.getUid()).size() < 6 ) {
+            inventaireRepository.save(monstre);
         }
-        return inventaireRepository.findByUid(uid);
     }
 
-    @GetMapping("/remove_monstre_inventaire/{id}/{uid}")
-    public List<Monstre> remove_monstre_inventaire(@PathVariable(value = "id") Long monstreId, @PathVariable(value = "uid") Integer uid){
-        inventaireRepository.delete(inventaireRepository.getById(monstreId));
-        return inventaireRepository.findByUid(uid);
+    @DeleteMapping("/{id}")
+    public void remove_monstre_inventaire(@PathVariable(value = "id") Long monstreId) {
+        inventaireRepository.deleteById(monstreId);
     }
 
 }

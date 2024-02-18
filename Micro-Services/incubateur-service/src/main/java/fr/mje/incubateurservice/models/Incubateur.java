@@ -9,12 +9,14 @@ public class Incubateur {
     private Integer id;
     private Integer eggId;
     private Integer incubingTime;
-    private Boolean isIncubing;
-    private Integer UID;
+        private Boolean isIncubing;
+    private Integer uid;
 
-    public Incubateur(Integer incubingTime, Boolean isIncubing) {
+    public Incubateur(Integer eggId, Integer incubingTime, Boolean isIncubing, Integer uid) {
         this.incubingTime = incubingTime;
         this.isIncubing = isIncubing;
+        this.eggId = eggId;
+        this.uid = uid;
     }
 
     public Incubateur() {
@@ -53,12 +55,12 @@ public class Incubateur {
         this.isIncubing = isIncubing;
     }
 
-    public Integer getUID() {
-        return UID;
+    public Integer getUid() {
+        return uid;
     }
 
-    public void setUID(Integer UID) {
-        this.UID = UID;
+    public void setUid(Integer uid) {
+        this.uid = uid;
     }
 
 }

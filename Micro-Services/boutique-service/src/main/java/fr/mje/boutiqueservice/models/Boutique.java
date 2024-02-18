@@ -35,8 +35,8 @@ public class Boutique {
         this.oeuf_1_hatch_time = (int)Math.floor(Math.random() * (100 - 10 + 1) + 10);
         this.oeuf_1_prix = (int)Math.floor(Math.random() * (100 - 10 + 1) + 10);
 
-        this.oeuf_1_hatch_time = (int)Math.floor(Math.random() * (100 - 10 + 1) + 10);
-        this.oeuf_1_prix = (int)Math.floor(Math.random() * (100 - 10 + 1) + 10);
+        this.oeuf_2_hatch_time = (int)Math.floor(Math.random() * (100 - 10 + 1) + 10);
+        this.oeuf_2_prix = (int)Math.floor(Math.random() * (100 - 10 + 1) + 10);
 
         this.incubateur_1_prix = (int)Math.floor(Math.random() * (1000 - 100 + 1) + 100);
 

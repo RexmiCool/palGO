@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1")
 public class OeufController {
@@ -14,25 +15,20 @@ public class OeufController {
     @Autowired
     private OeufRepository oeufRepository;
 
-    @GetMapping("/oeuf/{uid}")
+    @GetMapping("/{uid}")
     public List<Oeuf> getoeuf(@PathVariable(value = "uid") Integer uid) {
         return oeufRepository.findByUid(uid);
     }
 
-    @GetMapping("/add_oeuf/{hatch_time}/{prix}/{uid}")
-    public List<Oeuf> add_oeuf(@PathVariable(value = "hatch_time") Integer hatch_time, @PathVariable(value = "prix") Integer prix, @PathVariable(value = "uid") Integer uid) {
-        oeufRepository.save(new Oeuf(hatch_time,prix,uid));
-        return oeufRepository.findByUid(uid);
+    @PostMapping("/")
+    public void add_oeuf(@RequestBody Oeuf oeuf) {
+        oeufRepository.save(oeuf);
     }
 
-    @GetMapping("/remove_oeuf/{id}/{uid}")
-    public List<Oeuf> remove_oeuf(@PathVariable(value = "id") Long oeufId, @PathVariable(value = "uid") Integer uid){
-        oeufRepository.delete(oeufRepository.getById(oeufId));
-        return oeufRepository.findByUid(uid);
+    @DeleteMapping("/{id}")
+    public void remove_oeuf(@PathVariable(value = "id") Long oeufId) {
+        oeufRepository.deleteById(oeufId);
     }
-
-
-
 
 
 //    @GetMapping("/oeufs/{id}")

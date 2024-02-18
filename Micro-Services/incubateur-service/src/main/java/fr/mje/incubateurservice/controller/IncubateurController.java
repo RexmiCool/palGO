@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1")
 public class IncubateurController {
@@ -14,13 +15,19 @@ public class IncubateurController {
     @Autowired
     private IncubateurRepository incubateurRepository;
 
-    @GetMapping("/incubateur")
-    public List<Incubateur> getIncubateur() {
-        if (incubateurRepository.findAll().isEmpty()) {
-            incubateurRepository.save(new Incubateur());
+    @GetMapping("/{uid}")
+    public List<Incubateur> getIncubateur(@PathVariable(value = "uid") Integer uid) {
+        if (incubateurRepository.findByUid(uid).isEmpty()) {
+            incubateurRepository.save(new Incubateur(null, 13, false, uid));
         }
-        return incubateurRepository.findAll();
+        return incubateurRepository.findByUid(uid);
     }
+
+//    @GetMapping("/{uid}")
+//    public List<Incubateur> getIncubateur(@PathVariable(value = "uid") Integer uid) {
+//        return incubateurRepository.findByUid(uid);
+//    }
+
 
 //    @GetMapping("/generate_boutique")
 //    public List<fr.mje.incubateurservice.models.Incubateur> generate_boutique() {

@@ -13,7 +13,7 @@ public class Hero {
 
     public Hero(String name) {
         this.name = name;
-        this.money = 0;
+        this.money = 10000;
     }
 
     public Hero() { }

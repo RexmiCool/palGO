@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1")
 public class BoutiqueController {
@@ -14,7 +15,7 @@ public class BoutiqueController {
     @Autowired
     private BoutiqueRepository boutiqueRepository;
 
-    @GetMapping("/boutique")
+    @GetMapping("/")
     public List<Boutique> getBoutique() {
         if (boutiqueRepository.findAll().size() == 0) {
             boutiqueRepository.save(new Boutique());
@@ -22,12 +23,12 @@ public class BoutiqueController {
         return boutiqueRepository.findAll();
     }
 
-    @GetMapping("/generate_boutique")
-    public List<Boutique> generate_boutique() {
-        boutiqueRepository.deleteAll();
-        boutiqueRepository.save(new Boutique());
-        return boutiqueRepository.findAll();
-    }
+//    @GetMapping("/generate_boutique")
+//    public List<Boutique> generate_boutique() {
+//        boutiqueRepository.deleteAll();
+//        boutiqueRepository.save(new Boutique());
+//        return boutiqueRepository.findAll();
+//    }
 
 
 
