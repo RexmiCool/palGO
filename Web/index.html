@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+  <h1>Connect to a Hero</h1>
+  <input type="text" name="hero-name" id="hero-name-input">
+  <input type="button" value="Create" id="hero-name-button">
+
+  <div id="container" style="display: flex; flex-direction: column;"></div>
+
+  <script>
+    let inputtext = document.getElementById("hero-name-input");
+    let inputbutton = document.getElementById("hero-name-button");
+
+    inputbutton.addEventListener("click", function () {
+      const container = document.getElementById("container");
+      let list = "";
+
+      for (let i = 0; i < container.children.length; i++) {
+        list += container.children[i].innerHTML + (i < container.children.length - 1 ? "," : "");
+      }
+      if (inputtext.value != "" && !list.includes(inputtext.value)) {
+
+        fetch('http://localhost:4575/api/v1/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name: inputtext.value,
+            money: 10000
+          })
+        })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response;
+          })
+          .then(data => {
+            console.log('Successfully sent data:', data);
+
+            while (container.firstChild) {
+              container.removeChild(container.lastChild);
+            }
+
+            fetch("http://localhost:4575/api/v1/")
+              .then((response) => response.json())
+              .then((data) => {
+                displayButtons(data);
+              });
+
+
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      }
+      else {
+        alert("Invalid name");
+      }
+    });
+
+
+
+
+    function createButton(hero) {
+      const button = document.createElement("button");
+      button.textContent = hero.name;
+      button.classList.add("hero-button");
+
+      button.addEventListener("click", function () {
+        localStorage['hero'] = JSON.stringify(hero);
+        window.location.pathname = "hero.html";
+      });
+
+      return button;
+    }
+
+    function displayButtons(heroes) {
+      const container = document.getElementById("container");
+
+      for (const hero of heroes) {
+        const button = createButton(hero);
+        container.appendChild(button);
+      }
+
+
+    }
+
+    // Call the API to retrieve the list of heroes
+    fetch("http://localhost:4575/api/v1/")
+      .then((response) => response.json())
+      .then((data) => {
+        displayButtons(data);
+      });
+
+  </script>
+
+</body>
+
+</html>

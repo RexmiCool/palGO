@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <div id="main">
+    <H2 id="money"></H2>
+    <div id="egginc">
+      <div id="inc">
+        <p>INCUBATORS</p>
+        <div id="inc-container" style="display: flex; flex-direction: column;"></div>
+      </div>
+      <div id="egg">
+        <p>EGGS</p>
+        <div id="egg-container" style="display: flex; flex-direction: column;"></div>
+      </div>
+    </div>
+    <div id="monster">
+      <div id="inventory">
+        <p>INVENTORY</p>
+        <div id="inv-container" style="display: flex; flex-direction: column;"></div>
+      </div>
+      <div id="storage">
+        <p>STORAGE</p>
+        <div id="monst-container" style="display: flex; flex-direction: column;"></div>
+      </div>
+    </div>
+    <div id="shop">
+      <p>SHOP</p>
+      <div id="shop-container" style="display: flex; flex-direction: column;"></div>
+    </div>
+  </div>
+
+
+
+  <script>
+
+    // LOAD HERO
+    var stored = localStorage['hero'];
+    if (stored) {
+      hero = JSON.parse(stored);
+      console.log("connected to : ");
+      console.log(hero);
+      actualize_hero();
+    }
+    else {
+      alert("undefined hero")
+      window.location.pathname = "index.html";
+    }
+
+
+    // LOAD SHOP
+
+    function createDivShop(type, price, hatch_time = null) {
+      const div = document.createElement("div");
+
+      const h3 = document.createElement("h3");
+      h3.textContent = type;
+      div.appendChild(h3);
+
+      const pr = document.createElement("p");
+      pr.textContent = "Price : " + price;
+      div.appendChild(pr);
+
+      if (hatch_time != null) {
+        const ht = document.createElement("p");
+        ht.textContent = "Hatch Time : " + hatch_time;
+        div.appendChild(ht);
+      }
+
+      const button = document.createElement("button");
+      button.textContent = "BUY";
+      button.classList.add("shop-button");
+      button.addEventListener("click", function () {
+        if (type == "OEUF") {
+          buyEgg(price, hatch_time);
+        } else if (type == "INCUBATEUR") {
+          buyInc(price);
+        }
+      });
+
+      div.appendChild(button);
+
+      return div;
+
+    }
+
+    function createButtonsShop(items) {
+      const shop_container = document.getElementById("shop-container");
+
+      for (const item of items) {
+        shop_container.appendChild(createDivShop("OEUF", item.oeuf_1_prix, item.oeuf_1_hatch_time));
+        shop_container.appendChild(createDivShop("OEUF", item.oeuf_2_prix, item.oeuf_2_hatch_time));
+        shop_container.appendChild(createDivShop("INCUBATEUR", item.incubateur_1_prix));
+        shop_container.appendChild(createDivShop("INCUBATEUR", item.incubateur_2_prix));
+      }
+
+
+    }
+
+    fetch("http://localhost:4570/api/v1/")
+      .then((response) => response.json())
+      .then((data) => {
+        createButtonsShop(data);
+      });
+
+
+
+
+    // LOAD EGGS
+
+
+    function createButtonEgg(egg) {
+      const button = document.createElement("button");
+      button.textContent = "OEUF\n" + egg.hatch_time + "\n" + egg.prix;
+      button.classList.add("egg-button");
+
+      button.addEventListener("click", function () {
+        console.log(button.textContent);
+      });
+      return button;
+    }
+
+    function displayButtonsEgg(eggs) {
+      const egg_container = document.getElementById("egg-container");
+
+      while (egg_container.firstChild) {
+        egg_container.removeChild(egg_container.lastChild);
+      }
+
+      for (const egg of eggs) {
+        const button = createButtonEgg(egg);
+        egg_container.appendChild(button);
+      }
+
+
+    }
+
+    actualize_egg();
+
+
+
+    // LOAD INCUBATEUR
+
+    function createButtonInc(inc) {
+      const button = document.createElement("button");
+      button.textContent = "INCUBATEUR \n" + inc.eggId + "\n" + inc.incubingTime + "\n" + inc.isIncubing;
+      button.classList.add("inc-button");
+
+      button.addEventListener("click", function () {
+        console.log(button.textContent);
+      });
+      return button;
+    }
+
+    function displayButtonsInc(incs) {
+      const inc_container = document.getElementById("inc-container");
+
+      while (inc_container.firstChild) {
+        inc_container.removeChild(inc_container.lastChild);
+      }
+
+      for (const inc of incs) {
+        const button = createButtonInc(inc);
+        inc_container.appendChild(button);
+      }
+
+
+    }
+
+    actualize_inc();
+
+
+
+    // LOAD Monster storage
+
+    function createButtonMonst(monster) {
+      const button = document.createElement("button");
+      button.textContent = "MONSTRE \n" + monster.name;
+      button.classList.add("monst-button");
+
+      button.addEventListener("click", function () {
+        console.log(button.textContent);
+      });
+      return button;
+    }
+
+    function displayButtonsMonst(monsters) {
+      const monst_container = document.getElementById("monst-container");
+
+      for (const monster of monsters) {
+        const button = createButtonMonst(monster);
+        monst_container.appendChild(button);
+      }
+
+
+    }
+
+    // Call the API to retrieve the list of monsters
+    fetch("http://localhost:4572/api/v1/" + hero.id)
+      .then((response) => response.json())
+      .then((data) => {
+        displayButtonsMonst(data);
+      });
+
+
+
+
+    // LOAD Inventory
+    function createButtonInv(monster) {
+      const button = document.createElement("button");
+      button.textContent = "MONSTRE \n" + monster.name;
+      button.classList.add("inv-button");
+
+      button.addEventListener("click", function () {
+        console.log(button.textContent);
+      });
+      return button;
+    }
+
+    function displayButtonsInv(monsters) {
+      const inv_container = document.getElementById("inv-container");
+
+      for (const monster of monsters) {
+        const button = createButtonInv(monster);
+        inv_container.appendChild(button);
+      }
+    }
+
+    // Call the API to retrieve the list of monsters in inv
+    fetch("http://localhost:4574/api/v1/" + hero.id)
+      .then((response) => response.json())
+      .then((data) => {
+        displayButtonsInv(data);
+      });
+
+
+
+    // SHOP BUY FUNCTIONS
+
+    function buyEgg(price, hatch_time) {
+      actualize_hero();
+
+      if (price <= hero.money) {
+        let new_hero = hero;
+        new_hero.money = new_hero.money - price;
+        update_hero(new_hero);
+        actualize_hero();
+
+        create_egg(price, hatch_time);
+        actualize_egg();
+
+      } else {
+        alert("You dont have enought money");
+      }
+
+    }
+
+    function buyInc(price) {
+      actualize_hero();
+      actualize_inc();
+
+      if (document.getElementById("inc-container").childElementCount < 6) {
+        if (price <= hero.money) {
+          let new_hero = hero;
+          new_hero.money = new_hero.money - price;
+          update_hero(new_hero);
+          actualize_hero();
+
+          create_inc();
+          actualize_inc();
+
+        } else {
+          alert("You dont have enought money");
+        }
+      } else {
+        alert("You already have 6 incubators");
+      }
+
+    }
+
+    // LOCAL STORAGE HERO FUCTIONS
+
+    function actualize_hero() {
+
+      // Call the API to retrieve the list of heroes
+      fetch("http://localhost:4575/api/v1/")
+        .then((response) => response.json())
+        .then((data) => {
+          data.forEach(new_hero => {
+            if (new_hero.id == hero.id) {
+              localStorage['hero'] = JSON.stringify(new_hero);
+              hero = new_hero;
+            }
+          });
+        });
+
+      const money_count = document.getElementById("money");
+      if (money_count.innerText != hero.money) {
+        money_count.innerText = hero.money;
+      }
+
+
+    }
+
+    function update_hero(new_hero) {
+      // Call the API to update the hero
+      fetch('http://localhost:4575/api/v1/', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id: new_hero.id,
+          name: new_hero.name,
+          money: new_hero.money
+        })
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response;
+        })
+        .then(data => {
+          console.log('Successfully sent data:', data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+
+
+    function actualize_egg() {
+      // Call the API to retrieve the list of eggs
+      fetch("http://localhost:4571/api/v1/" + hero.id)
+        .then((response) => response.json())
+        .then((data) => {
+          displayButtonsEgg(data);
+        });
+    }
+
+    function create_egg(price, hatch_time) {
+      // Call the API to update the hero
+      fetch('http://localhost:4571/api/v1/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          uid: hero.id,
+          prix: price,
+          hatch_time: hatch_time
+        })
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response;
+        })
+        .then(data => {
+          console.log('Successfully sent data:', data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+
+    function actualize_inc() {
+      // Call the API to retrieve the list of eggs
+      fetch("http://localhost:4573/api/v1/" + hero.id)
+        .then((response) => response.json())
+        .then((data) => {
+          displayButtonsInc(data);
+        });
+    }
+
+    function create_inc() {
+      // Call the API to update the hero
+      fetch('http://localhost:4573/api/v1/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          uid: hero.id
+        })
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response;
+        })
+        .then(data => {
+          console.log('Successfully sent data:', data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+
+  </script>
+
+
+</body>
+
+</html>
