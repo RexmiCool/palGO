@@ -3,6 +3,13 @@
 
 <head>
   <link rel="stylesheet" href="styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/beercss@3.4.13/dist/cdn/beer.min.css" rel="stylesheet">
+
+  <script type="module" src="https://cdn.jsdelivr.net/npm/beercss@3.4.13/dist/cdn/beer.min.js"></script>
+
+  <script type="module"
+    src="https://cdn.jsdelivr.net/npm/material-dynamic-colors@1.1.0/dist/cdn/material-dynamic-colors.min.js"></script>
+
 </head>
 
 <body>
@@ -16,7 +23,8 @@
       </div>
       <div id="egg">
         <p>EGGS</p>
-        <div id="egg-container" style="display: flex; flex-direction: column;"></div>
+        <div id="egg-container" class="row scroll" style="max-width: 50vw;"></div>
+        <!-- <div id="egg-container" style="display: flex; flex-direction: column;"></div> -->
       </div>
     </div>
     <div id="monster">
@@ -39,6 +47,9 @@
 
   <script>
 
+    let inc_list;
+
+
     // LOAD HERO
     var stored = localStorage['hero'];
     if (stored) {
@@ -52,6 +63,16 @@
       window.location.pathname = "index.html";
     }
 
+    setInterval(actualize_all, 1000);
+
+    function actualize_all() {
+      actualize_egg();
+      actualize_hero();
+      actualize_inc();
+      actualize_inventory();
+      actualize_monster_storage();
+      actualize_shop();
+    }
 
     // LOAD SHOP
 
@@ -92,6 +113,10 @@
     function createButtonsShop(items) {
       const shop_container = document.getElementById("shop-container");
 
+      while (shop_container.firstChild) {
+        shop_container.removeChild(shop_container.lastChild);
+      }
+
       for (const item of items) {
         shop_container.appendChild(createDivShop("OEUF", item.oeuf_1_prix, item.oeuf_1_hatch_time));
         shop_container.appendChild(createDivShop("OEUF", item.oeuf_2_prix, item.oeuf_2_hatch_time));
@@ -102,27 +127,38 @@
 
     }
 
-    fetch("http://localhost:4570/api/v1/")
-      .then((response) => response.json())
-      .then((data) => {
-        createButtonsShop(data);
-      });
-
+    actualize_shop();
 
 
 
     // LOAD EGGS
 
+    function createArticleEgg(egg) {
+      const article = document.createElement('article');
+      article.classList.add('small-width', 'border');
 
-    function createButtonEgg(egg) {
-      const button = document.createElement("button");
-      button.textContent = "OEUF\n" + egg.hatch_time + "\n" + egg.prix;
-      button.classList.add("egg-button");
+      const title = document.createElement('h5');
+      title.textContent = 'Oeuf';
+      article.appendChild(title);
 
+      const text = document.createElement('p');
+      text.textContent = "HT : " + egg.hatch_time + "\nPr : " + egg.prix;
+      article.appendChild(text);
+
+      const space = document.createElement('div');
+      space.classList.add('space');
+      article.appendChild(space);
+
+      const nav = document.createElement('nav');
+      const button = document.createElement('button');
+      button.textContent = 'Hatch';
       button.addEventListener("click", function () {
-        console.log(button.textContent);
+        hatch_egg(egg.id, egg.hatch_time);
       });
-      return button;
+      nav.appendChild(button);
+      article.appendChild(nav);
+
+      return article;
     }
 
     function displayButtonsEgg(eggs) {
@@ -133,11 +169,8 @@
       }
 
       for (const egg of eggs) {
-        const button = createButtonEgg(egg);
-        egg_container.appendChild(button);
+        egg_container.appendChild(createArticleEgg(egg));
       }
-
-
     }
 
     actualize_egg();
@@ -148,7 +181,7 @@
 
     function createButtonInc(inc) {
       const button = document.createElement("button");
-      button.textContent = "INCUBATEUR \n" + inc.eggId + "\n" + inc.incubingTime + "\n" + inc.isIncubing;
+      button.textContent = "INCUBATEUR \n" + inc.incubingTime + "\n" + inc.isIncubing;
       button.classList.add("inc-button");
 
       button.addEventListener("click", function () {
@@ -200,13 +233,7 @@
 
     }
 
-    // Call the API to retrieve the list of monsters
-    fetch("http://localhost:4572/api/v1/" + hero.id)
-      .then((response) => response.json())
-      .then((data) => {
-        displayButtonsMonst(data);
-      });
-
+    actualize_monster_storage();
 
 
 
@@ -231,12 +258,7 @@
       }
     }
 
-    // Call the API to retrieve the list of monsters in inv
-    fetch("http://localhost:4574/api/v1/" + hero.id)
-      .then((response) => response.json())
-      .then((data) => {
-        displayButtonsInv(data);
-      });
+    actualize_inventory();
 
 
 
@@ -249,9 +271,9 @@
         let new_hero = hero;
         new_hero.money = new_hero.money - price;
         update_hero(new_hero);
-        actualize_hero();
-
         create_egg(price, hatch_time);
+
+        actualize_hero();
         actualize_egg();
 
       } else {
@@ -269,9 +291,9 @@
           let new_hero = hero;
           new_hero.money = new_hero.money - price;
           update_hero(new_hero);
-          actualize_hero();
-
           create_inc();
+
+          actualize_hero();
           actualize_inc();
 
         } else {
@@ -327,7 +349,7 @@
           return response;
         })
         .then(data => {
-          console.log('Successfully sent data:', data);
+          // console.log('Successfully sent data:', data);
         })
         .catch(error => {
           console.error('Error:', error);
@@ -364,12 +386,35 @@
           return response;
         })
         .then(data => {
-          console.log('Successfully sent data:', data);
+          // console.log('Successfully sent data:', data);
         })
         .catch(error => {
           console.error('Error:', error);
         });
     }
+
+    function delete_egg(id) {
+      // Call the API to update the hero
+      fetch('http://localhost:4571/api/v1/'+id, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response;
+        })
+        .then(data => {
+          // console.log('Successfully sent data:', data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+
 
     function actualize_inc() {
       // Call the API to retrieve the list of eggs
@@ -377,6 +422,7 @@
         .then((response) => response.json())
         .then((data) => {
           displayButtonsInc(data);
+          inc_list = data;
         });
     }
 
@@ -398,11 +444,94 @@
           return response;
         })
         .then(data => {
-          console.log('Successfully sent data:', data);
+          // console.log('Successfully sent data:', data);
         })
         .catch(error => {
           console.error('Error:', error);
         });
+    }
+
+    function update_inc(new_inc) {
+      // Call the API to update the hero
+      fetch('http://localhost:4573/api/v1/', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id: new_inc.id,
+          incubingTime: new_inc.incubingTime,
+          isIncubing: new_inc.isIncubing,
+          uid: new_inc.uid
+        })
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response;
+        })
+        .then(data => {
+          // console.log('Successfully sent data:', data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+
+
+    function actualize_shop() {
+      // Call the API to retrieve the list of eggs
+      fetch("http://localhost:4570/api/v1/")
+        .then((response) => response.json())
+        .then((data) => {
+          createButtonsShop(data);
+        });
+    }
+
+
+    function actualize_monster_storage() {
+      // Call the API to retrieve the list of eggs
+      fetch("http://localhost:4572/api/v1/" + hero.id)
+        .then((response) => response.json())
+        .then((data) => {
+          displayButtonsMonst(data);
+        });
+    }
+
+
+    function actualize_inventory() {
+      // Call the API to retrieve the list of eggs
+      fetch("http://localhost:4574/api/v1/" + hero.id)
+        .then((response) => response.json())
+        .then((data) => {
+          displayButtonsInv(data);
+        });
+    }
+
+
+
+    function hatch_egg(id, hatch_time) {
+      actualize_inc();
+      var incubbed = false;
+      inc_list.forEach(inc => {
+        if (!incubbed && !inc.isIncubing) {
+          let new_inc = inc;
+          new_inc.isIncubing = true;
+          new_inc.incubingTime = hatch_time;
+          update_inc(new_inc);
+          delete_egg(id);
+
+          actualize_inc();
+          actualize_egg();
+          incubbed = true;
+        }
+      });
+      if (!incubbed) {
+        alert("All incubators are full");
+      }
+
+
     }
 
   </script>

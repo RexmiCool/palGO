@@ -9,14 +9,12 @@ public class Incubateur {
     private Integer id;
     private Integer incubingTime;
     private Boolean isIncubing;
-    private Integer eggId;
     private Integer uid;
 
     public Incubateur(Integer uid) {
         this.uid = uid;
         this.isIncubing = false;
         this.incubingTime = null;
-        this.eggId = null;
     }
 
     public Incubateur() {
