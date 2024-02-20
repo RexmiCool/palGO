@@ -9,11 +9,15 @@ public class Monstre {
     private Integer id;
     private Integer uid;
     private String name;
+    private Integer health;
+    private Integer damage;
 
 
-    public Monstre(String name, Integer uid) {
+    public Monstre(String name, Integer uid, Integer health, Integer damage) {
         this.name = name;
         this.uid = uid;
+        this.health = health;
+        this.damage = damage;
     }
 
     public Monstre() { }
@@ -40,5 +44,21 @@ public class Monstre {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getHealth() {
+        return health;
+    }
+
+    public void setHealth(Integer health) {
+        this.health = health;
+    }
+
+    public Integer getDamage() {
+        return damage;
+    }
+
+    public void setDamage(Integer damage) {
+        this.damage = damage;
     }
 }

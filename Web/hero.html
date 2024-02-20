@@ -15,31 +15,45 @@
 <body>
 
   <div id="main">
-    <H2 id="money"></H2>
-    <div id="egginc">
-      <div id="inc">
-        <p>INCUBATORS</p>
-        <div id="inc-container" style="display: flex; flex-direction: column;"></div>
+
+    <article class="border fill small-margin" style="height: 100px; width: 250px;">
+      <div class="row">
+        <img class="circle large" src="images/user.png">
+        <div class="max">
+          <h5 id="hero-name"></h5>
+          <p id="money"></p>
+        </div>
       </div>
-      <div id="egg">
-        <p>EGGS</p>
-        <div id="egg-container" class="row scroll" style="max-width: 50vw;"></div>
-        <!-- <div id="egg-container" style="display: flex; flex-direction: column;"></div> -->
-      </div>
-    </div>
+    </article>
+    
+
     <div id="monster">
-      <div id="inventory">
-        <p>INVENTORY</p>
-        <div id="inv-container" style="display: flex; flex-direction: column;"></div>
+      <div id="inventory" class="border fill small-padding medium-margin round" style="max-width: 1252px;">
+        <H4>Inventory</H4>
+        <div id="inv-container" class="row scroll" style="max-width: 1252px;"></div>
       </div>
-      <div id="storage">
-        <p>STORAGE</p>
-        <div id="monst-container" style="display: flex; flex-direction: column;"></div>
+
+      <div id="storage" class="border fill small-padding medium-margin round" style="max-width: 1252px;">
+        <H4>Storage</H4>
+        <div id="monst-container" class="row scroll" style="max-width: 1252px;"></div>
       </div>
     </div>
-    <div id="shop">
-      <p>SHOP</p>
-      <div id="shop-container" style="display: flex; flex-direction: column;"></div>
+
+    <div id="egginc">
+      <div id="inc" class="border fill small-padding medium-margin round" style="max-width: 1252px;">
+        <H4>Incubators</H4>
+        <div id="inc-container" class="row scroll" style="max-width: 1252px;"></div>
+      </div>
+
+      <div id="egg" class="border fill small-padding medium-margin round" style="max-width: 1252px;">
+        <H4>Eggs</H4>
+        <div id="egg-container" class="row scroll" style="max-width: 1252px;"></div>
+      </div>
+    </div>
+
+    <div id="shop" class="border fill small-padding medium-margin round" style="max-width: 835px;">
+      <H4>Shop</H4>
+      <div id="shop-container" class="row scroll" style="max-width: 835px;"></div>
     </div>
   </div>
 
@@ -75,6 +89,46 @@
     }
 
     // LOAD SHOP
+
+    function createArticleShop(type, price, hatch_time = null) {
+      const article = document.createElement('article');
+      article.classList.add('small-width', 'border');
+
+      const title = document.createElement('h6');
+      title.textContent = type;
+      article.appendChild(title);
+
+      const img = document.createElement('img');
+      if (type == "OEUF") {
+        img.src = "egg.png";
+        img.style = "width: 60%;";
+      } else if (type == "INCUBATEUR") {
+        img.src = "inc_vide.png";
+        img.style = "width: 100%;";
+      }
+      article.appendChild(img);
+
+      if (hatch_time != null) {
+        const ht = document.createElement("p");
+        ht.textContent = "Hatch Time : " + hatch_time;
+        article.appendChild(ht);
+      }
+
+      const nav = document.createElement('nav');
+      const button = document.createElement('button');
+      button.textContent = 'Buy - ' + price + "$";
+      button.addEventListener("click", function () {
+        if (type == "OEUF") {
+          buyEgg(price, hatch_time);
+        } else if (type == "INCUBATEUR") {
+          buyInc(price);
+        }
+      });
+      nav.appendChild(button);
+      article.appendChild(nav);
+
+      return article;
+    }
 
     function createDivShop(type, price, hatch_time = null) {
       const div = document.createElement("div");
@@ -118,10 +172,10 @@
       }
 
       for (const item of items) {
-        shop_container.appendChild(createDivShop("OEUF", item.oeuf_1_prix, item.oeuf_1_hatch_time));
-        shop_container.appendChild(createDivShop("OEUF", item.oeuf_2_prix, item.oeuf_2_hatch_time));
-        shop_container.appendChild(createDivShop("INCUBATEUR", item.incubateur_1_prix));
-        shop_container.appendChild(createDivShop("INCUBATEUR", item.incubateur_2_prix));
+        shop_container.appendChild(createArticleShop("OEUF", item.oeuf_1_prix, item.oeuf_1_hatch_time));
+        shop_container.appendChild(createArticleShop("OEUF", item.oeuf_2_prix, item.oeuf_2_hatch_time));
+        shop_container.appendChild(createArticleShop("INCUBATEUR", item.incubateur_1_prix));
+        shop_container.appendChild(createArticleShop("INCUBATEUR", item.incubateur_2_prix));
       }
 
 
@@ -141,22 +195,29 @@
       title.textContent = 'Oeuf';
       article.appendChild(title);
 
-      const text = document.createElement('p');
-      text.textContent = "HT : " + egg.hatch_time + "\nPr : " + egg.prix;
-      article.appendChild(text);
-
-      const space = document.createElement('div');
-      space.classList.add('space');
-      article.appendChild(space);
+      const img = document.createElement('img');
+      img.src = "egg.png";
+      img.style = "width: 60%;";
+      article.appendChild(img);
 
       const nav = document.createElement('nav');
       const button = document.createElement('button');
-      button.textContent = 'Hatch';
+      button.textContent = 'Incube - ' + egg.hatch_time + "s";
       button.addEventListener("click", function () {
-        hatch_egg(egg.id, egg.hatch_time);
+        incube_egg(egg.id, egg.hatch_time);
       });
       nav.appendChild(button);
       article.appendChild(nav);
+
+
+      const nav2 = document.createElement('nav');
+      const button2 = document.createElement('button');
+      button2.textContent = 'Sell - ' + egg.prix + "$";
+      button2.addEventListener("click", function () {
+        sellEgg(egg.id, egg.prix);
+      });
+      nav2.appendChild(button2);
+      article.appendChild(nav2);
 
       return article;
     }
@@ -179,15 +240,33 @@
 
     // LOAD INCUBATEUR
 
-    function createButtonInc(inc) {
-      const button = document.createElement("button");
-      button.textContent = "INCUBATEUR \n" + inc.incubingTime + "\n" + inc.isIncubing;
-      button.classList.add("inc-button");
+    function createArticleInc(inc) {
+      const article = document.createElement('article');
+      article.classList.add('small-width', 'border');
 
-      button.addEventListener("click", function () {
-        console.log(button.textContent);
-      });
-      return button;
+      const title = document.createElement('h5');
+      title.textContent = 'Incubateur';
+      article.appendChild(title);
+
+      const img = document.createElement('img');
+      if (inc.isIncubing) {
+        img.src = "inc_plein.png";
+      } else {
+        img.src = "inc_vide.png";
+      }
+      img.style = "width: 100%;";
+      article.appendChild(img);
+
+
+      const text = document.createElement('p');
+      if (inc.isIncubing) {
+        text.textContent = inc.incubingTime + "s";
+      } else {
+        text.textContent = "EMPTY";
+      }
+      article.appendChild(text);
+
+      return article;
     }
 
     function displayButtonsInc(incs) {
@@ -198,7 +277,7 @@
       }
 
       for (const inc of incs) {
-        const button = createButtonInc(inc);
+        const button = createArticleInc(inc);
         inc_container.appendChild(button);
       }
 
@@ -211,22 +290,61 @@
 
     // LOAD Monster storage
 
-    function createButtonMonst(monster) {
-      const button = document.createElement("button");
-      button.textContent = "MONSTRE \n" + monster.name;
-      button.classList.add("monst-button");
+    function createArticleMonster(monster) {
+      const article = document.createElement('article');
+      article.classList.add('small-width', 'border');
 
-      button.addEventListener("click", function () {
-        console.log(button.textContent);
-      });
-      return button;
+      const title = document.createElement('h5');
+      title.textContent = monster.name;
+      article.appendChild(title);
+
+      const img = document.createElement('img');
+      img.src = "images/dracofeu.png";
+      img.style = "width: 100%;";
+      article.appendChild(img);
+
+
+      const chip_h = document.createElement('a');
+      chip_h.classList.add('chip', 'round', 'fill', 'border');
+
+      const h_img = document.createElement('img');
+      h_img.src = 'images/health.png';
+      chip_h.appendChild(h_img);
+
+      const span_h = document.createElement('span');
+      span_h.textContent = monster.health;
+      chip_h.appendChild(span_h);
+
+      article.appendChild(chip_h);
+
+
+      const chip_d = document.createElement('a');
+      chip_d.classList.add('chip', 'round', 'fill', 'border');
+
+      const d_img = document.createElement('img');
+      d_img.src = 'images/damage.png';
+      chip_d.appendChild(d_img);
+
+      const span_d = document.createElement('span');
+      span_d.textContent = monster.damage;
+      chip_d.appendChild(span_d);
+
+      article.appendChild(chip_d);
+
+
+
+      return article;
     }
 
     function displayButtonsMonst(monsters) {
       const monst_container = document.getElementById("monst-container");
 
+      while (monst_container.firstChild) {
+        monst_container.removeChild(monst_container.lastChild);
+      }
+
       for (const monster of monsters) {
-        const button = createButtonMonst(monster);
+        const button = createArticleMonster(monster);
         monst_container.appendChild(button);
       }
 
@@ -238,22 +356,62 @@
 
 
     // LOAD Inventory
-    function createButtonInv(monster) {
-      const button = document.createElement("button");
-      button.textContent = "MONSTRE \n" + monster.name;
-      button.classList.add("inv-button");
 
-      button.addEventListener("click", function () {
-        console.log(button.textContent);
-      });
-      return button;
+    function createArticleInv(monster) {
+      const article = document.createElement('article');
+      article.classList.add('small-width', 'border');
+
+      const title = document.createElement('h5');
+      title.textContent = monster.name;
+      article.appendChild(title);
+
+      const img = document.createElement('img');
+      img.src = "images/dracofeu.png";
+      img.style = "width: 100%;";
+      article.appendChild(img);
+
+
+      const chip_h = document.createElement('a');
+      chip_h.classList.add('chip', 'round', 'fill', 'border');
+
+      const h_img = document.createElement('img');
+      h_img.src = 'images/health.png';
+      chip_h.appendChild(h_img);
+
+      const span_h = document.createElement('span');
+      span_h.textContent = monster.health;
+      chip_h.appendChild(span_h);
+
+      article.appendChild(chip_h);
+
+
+      const chip_d = document.createElement('a');
+      chip_d.classList.add('chip', 'round', 'fill', 'border');
+
+      const d_img = document.createElement('img');
+      d_img.src = 'images/damage.png';
+      chip_d.appendChild(d_img);
+
+      const span_d = document.createElement('span');
+      span_d.textContent = monster.damage;
+      chip_d.appendChild(span_d);
+
+      article.appendChild(chip_d);
+
+
+
+      return article;
     }
 
     function displayButtonsInv(monsters) {
       const inv_container = document.getElementById("inv-container");
 
+      while (inv_container.firstChild) {
+        inv_container.removeChild(inv_container.lastChild);
+      }
+
       for (const monster of monsters) {
-        const button = createButtonInv(monster);
+        const button = createArticleInv(monster);
         inv_container.appendChild(button);
       }
     }
@@ -279,6 +437,19 @@
       } else {
         alert("You dont have enought money");
       }
+
+    }
+
+    function sellEgg(id, price) {
+      actualize_hero();
+
+      let new_hero = hero;
+      new_hero.money = new_hero.money + price;
+      update_hero(new_hero);
+      delete_egg(id);
+
+      actualize_hero();
+      actualize_egg();
 
     }
 
@@ -323,7 +494,12 @@
 
       const money_count = document.getElementById("money");
       if (money_count.innerText != hero.money) {
-        money_count.innerText = hero.money;
+        money_count.innerText = hero.money + " $";
+      }
+
+      const hero_name = document.getElementById("hero-name");
+      if (hero_name.innerText != hero.name) {
+        hero_name.innerText = hero.name;
       }
 
 
@@ -395,7 +571,7 @@
 
     function delete_egg(id) {
       // Call the API to update the hero
-      fetch('http://localhost:4571/api/v1/'+id, {
+      fetch('http://localhost:4571/api/v1/' + id, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
@@ -511,7 +687,7 @@
 
 
 
-    function hatch_egg(id, hatch_time) {
+    function incube_egg(id, hatch_time) {
       actualize_inc();
       var incubbed = false;
       inc_list.forEach(inc => {
