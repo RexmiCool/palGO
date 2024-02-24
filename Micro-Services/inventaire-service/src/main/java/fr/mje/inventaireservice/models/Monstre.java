@@ -23,8 +23,8 @@ public class Monstre {
     public Monstre(Integer uid) {
         this.name = "PokemON";
         this.uid = uid;
-        this.health = 232;
-        this.damage = 132;
+        this.health = (int)Math.floor(Math.random() * (100 - 10 + 1) + 10);
+        this.damage = (int)Math.floor(Math.random() * (100 - 10 + 1) + 10);
     }
 
     public Monstre() { }

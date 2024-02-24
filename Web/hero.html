@@ -287,6 +287,12 @@
               .catch(error => {
                 console.error('Error:', error);
               });
+
+              //Clear Incubateur
+              inc.isHatched = false;
+              inc.isIncubing = false;
+              inc.incubingTime = null;
+              update_inc(inc)
           } else {
             alert("You already have 6 Pokemons, release or transfer oneto your storage");
             showActionsButtons();
@@ -727,7 +733,8 @@
           id: new_inc.id,
           incubingTime: new_inc.incubingTime,
           isIncubing: new_inc.isIncubing,
-          uid: new_inc.uid
+          uid: new_inc.uid,
+          isHatched: new_inc.isHatched
         })
       })
         .then(response => {

@@ -81,7 +81,7 @@
 
       button.addEventListener("click", function () {
         localStorage['hero'] = JSON.stringify(hero);
-        window.location.pathname = "hero.html";
+        window.open("hero.html");
       });
 
       return button;
