@@ -17,28 +17,9 @@ public class BoutiqueController {
 
     @GetMapping("/")
     public List<Boutique> getBoutique() {
-        if (boutiqueRepository.findAll().size() == 0) {
+        if (boutiqueRepository.findAll().isEmpty()) {
             boutiqueRepository.save(new Boutique());
         }
         return boutiqueRepository.findAll();
     }
-
-//    @GetMapping("/generate_boutique")
-//    public List<Boutique> generate_boutique() {
-//        boutiqueRepository.deleteAll();
-//        boutiqueRepository.save(new Boutique());
-//        return boutiqueRepository.findAll();
-//    }
-
-
-
-
-
-//    @GetMapping("/oeufs/{id}")
-//    public ResponseEntity< Oeuf > getOeufById(@PathVariable(value = "id") Long oeufId)
-//            throws ResourceNotFoundException {
-//        Oeuf employee = oeufRepository.findById(oeufId)
-//                .orElseThrow(() -> new ResourceNotFoundException("Employee not found for this id :: " + oeufId));
-//        return ResponseEntity.ok().body(employee);
-//    }
 }
