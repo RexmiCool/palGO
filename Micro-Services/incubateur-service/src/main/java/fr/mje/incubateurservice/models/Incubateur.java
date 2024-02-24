@@ -10,13 +10,13 @@ public class Incubateur {
     private Integer incubingTime;
     private Boolean isIncubing;
     private Integer uid;
-    private Boolean isReady;
+    private Boolean isHatched;
 
     public Incubateur(Integer uid) {
         this.uid = uid;
         this.isIncubing = false;
         this.incubingTime = null;
-        this.isReady = false;
+        this.isHatched = false;
     }
 
     public Incubateur() {
@@ -50,11 +50,12 @@ public class Incubateur {
         this.uid = uid;
     }
 
-    public Boolean getReady() {
-        return this.isReady;
+    public Boolean getIsHatched() {
+        return this.isHatched;
     }
 
-    public void setReady(Boolean isReady) {
-        this.isReady = isReady;
+    public void setIsHatched(Boolean isHatched) {
+        this.isHatched = isHatched;
     }
 }
+

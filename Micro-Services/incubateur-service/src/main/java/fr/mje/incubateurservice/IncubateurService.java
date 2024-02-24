@@ -31,7 +31,7 @@ public class IncubateurService {
         for (Incubateur incubateur : incubateurs){
             Integer incubingTime = incubateur.getIncubingTime();
             if (incubingTime <= 0){
-                incubateur.setReady(true);
+                incubateur.setIsHatched(true);
             }else {
                 incubateur.setIncubingTime(incubingTime-1);
             }

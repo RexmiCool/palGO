@@ -23,7 +23,7 @@ public class InventaireController {
     @PostMapping("/")
     public void add_monstre_inventaire(@RequestBody Monstre monstre) {
         if (inventaireRepository.findByUid(monstre.getUid()).size() < 6 ) {
-            inventaireRepository.save(monstre);
+            inventaireRepository.save(new Monstre(monstre.getUid()));
         }
     }
 

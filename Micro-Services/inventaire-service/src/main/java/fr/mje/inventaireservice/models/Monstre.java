@@ -20,6 +20,13 @@ public class Monstre {
         this.damage = damage;
     }
 
+    public Monstre(Integer uid) {
+        this.name = "PokemON";
+        this.uid = uid;
+        this.health = 232;
+        this.damage = 132;
+    }
+
     public Monstre() { }
 
     public Integer getUid() {

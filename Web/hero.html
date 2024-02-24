@@ -25,7 +25,7 @@
         </div>
       </div>
     </article>
-    
+
 
     <div id="monster">
       <div id="inventory" class="border fill small-padding medium-margin round" style="max-width: 1252px;">
@@ -68,8 +68,6 @@
     var stored = localStorage['hero'];
     if (stored) {
       hero = JSON.parse(stored);
-      console.log("connected to : ");
-      console.log(hero);
       actualize_hero();
     }
     else {
@@ -258,13 +256,49 @@
       article.appendChild(img);
 
 
-      const text = document.createElement('p');
-      if (inc.isIncubing) {
-        text.textContent = inc.incubingTime + "s";
+      if (inc.isHatched) {
+        const button = document.createElement('button');
+        button.textContent = 'HATCH';
+        button.addEventListener("click", function () {
+          //HERE
+
+          // Call the API to update the inv
+          fetch('http://localhost:4574/api/v1/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              uid: hero.id,
+              name: "price",
+              health: 123,
+              damage: 4343
+            })
+          })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+              }
+              return response;
+            })
+            .then(data => {
+              // console.log('Successfully sent data:', data);
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+        });
+        article.appendChild(button);
       } else {
-        text.textContent = "EMPTY";
+        const text = document.createElement('p');
+        if (inc.isIncubing) {
+          text.textContent = inc.incubingTime + "s";
+        } else {
+          text.textContent = "EMPTY";
+        }
+        article.appendChild(text);
       }
-      article.appendChild(text);
+
 
       return article;
     }
@@ -610,7 +644,10 @@
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          uid: hero.id
+          uid: hero.id,
+          isHatched: false,
+          isIncubing: false,
+          incubingTime: null
         })
       })
         .then(response => {
