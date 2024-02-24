@@ -31,8 +31,7 @@ public class IncubateurService {
         for (Incubateur incubateur : incubateurs){
             Integer incubingTime = incubateur.getIncubingTime();
             if (incubingTime <= 0){
-                rabbitTemplate.convertAndSend(IncubateurServiceApplication.topicExchangeName, "hatched-egg", "Un oeuf vient d'éclore !");
-                incubateur.setIsIncubing(false);
+                incubateur.setReady(true);
             }else {
                 incubateur.setIncubingTime(incubingTime-1);
             }

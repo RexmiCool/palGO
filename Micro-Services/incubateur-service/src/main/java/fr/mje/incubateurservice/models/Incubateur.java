@@ -10,11 +10,13 @@ public class Incubateur {
     private Integer incubingTime;
     private Boolean isIncubing;
     private Integer uid;
+    private Boolean isReady;
 
     public Incubateur(Integer uid) {
         this.uid = uid;
         this.isIncubing = false;
         this.incubingTime = null;
+        this.isReady = false;
     }
 
     public Incubateur() {
@@ -48,4 +50,11 @@ public class Incubateur {
         this.uid = uid;
     }
 
+    public Boolean getReady() {
+        return this.isReady;
+    }
+
+    public void setReady(Boolean isReady) {
+        this.isReady = isReady;
+    }
 }
