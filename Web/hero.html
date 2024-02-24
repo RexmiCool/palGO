@@ -260,33 +260,37 @@
         const button = document.createElement('button');
         button.textContent = 'HATCH';
         button.addEventListener("click", function () {
-          //HERE
 
-          // Call the API to update the inv
-          fetch('http://localhost:4574/api/v1/', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              uid: hero.id,
-              name: "price",
-              health: 123,
-              damage: 4343
+          if (document.getElementById("inv-container").childElementCount < 6) {
+            // Call the API to update the inv
+            fetch('http://localhost:4574/api/v1/', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                uid: hero.id,
+                name: "price",
+                health: 123,
+                damage: 4343
+              })
             })
-          })
-            .then(response => {
-              if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-              }
-              return response;
-            })
-            .then(data => {
-              // console.log('Successfully sent data:', data);
-            })
-            .catch(error => {
-              console.error('Error:', error);
-            });
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response;
+              })
+              .then(data => {
+                // console.log('Successfully sent data:', data);
+              })
+              .catch(error => {
+                console.error('Error:', error);
+              });
+          } else {
+            alert("You already have 6 Pokemons, release or transfer oneto your storage");
+            showActionsButtons();
+          }
         });
         article.appendChild(button);
       } else {
@@ -431,6 +435,32 @@
       chip_d.appendChild(span_d);
 
       article.appendChild(chip_d);
+
+      const button_release = document.createElement('button');
+      button_release.textContent = 'Release';
+      button_release.classList.add("actionsbutton");
+      button_release.addEventListener("click", function () {
+        hideActionsButtons();
+        delete_monster_inv(monster.id);
+      });
+
+      const button_transfer = document.createElement('button');
+      button_transfer.textContent = 'Transfer';
+      button_transfer.classList.add("actionsbutton");
+      button_transfer.addEventListener("click", function () {
+        hideActionsButtons();
+        delete_monster_inv(monster.id);
+        add_monster_storage(monster);
+      });
+
+      if (!actionsButtonsVisibility) {
+        button_release.style.visibility = "hidden";
+        button_transfer.style.visibility = "hidden";
+      }
+
+      article.appendChild(button_release);
+      article.appendChild(button_transfer);
+
 
 
 
@@ -625,6 +655,28 @@
         });
     }
 
+    function delete_monster_inv(id) {
+      // Call the API to update the hero
+      fetch('http://localhost:4574/api/v1/' + id, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response;
+        })
+        .then(data => {
+          // console.log('Successfully sent data:', data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+
 
     function actualize_inc() {
       // Call the API to retrieve the list of eggs
@@ -745,6 +797,52 @@
       }
 
 
+    }
+
+
+    function add_monster_storage(monstre) {
+      fetch('http://localhost:4572/api/v1/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          uid: monstre.uid,
+          name: monstre.name,
+          health: monstre.health,
+          damage: monstre.damage
+        })
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response;
+        })
+        .then(data => {
+          // console.log('Successfully sent data:', data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+
+    var actionsButtonsVisibility = false;
+
+    function hideActionsButtons() {
+      let button_list = document.getElementsByClassName('actionsbutton');
+      for (const button of button_list) {
+        button.style.visibility = 'hidden';
+      }
+      actionsButtonsVisibility = false;
+    }
+
+    function showActionsButtons() {
+      let button_list = document.getElementsByClassName('actionsbutton');
+      for (const button of button_list) {
+        button.style.visibility = 'visible';
+      }
+      actionsButtonsVisibility = true;
     }
 
   </script>
