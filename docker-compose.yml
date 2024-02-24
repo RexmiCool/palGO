@@ -43,6 +43,8 @@ services:
     networks:
       - palgo-network
     hostname: incubateur_service
+    depends_on:
+      - rabbitmq
 
   inventaire_service:
     build:
@@ -54,6 +56,9 @@ services:
     networks:
       - palgo-network
     hostname: inventaire_service
+    depends_on:
+      - rabbitmq
+      - incubateur_service
 
   hero_service:
     build:
@@ -67,6 +72,7 @@ services:
     hostname: hero_service
 
   rabbitmq:
+    container_name: rabbitmq
     image: rabbitmq:management
     ports:
       - "5672:5672"
