@@ -78,6 +78,14 @@ services:
       - "5672:5672"
       - "15672:15672"
 
+  apache:
+    build:
+      context: ./Web
+    ports:
+      - "80:80" # Map container port 80 to host port 80
+    volumes:
+      - ./Web:/usr/local/apache2/htdocs/ # Mount your website directory as a volume
+
 networks:
   palgo-network:
     name: palgo-network
