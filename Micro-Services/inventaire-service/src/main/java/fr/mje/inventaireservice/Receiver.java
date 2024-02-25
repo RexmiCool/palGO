@@ -5,9 +5,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Receiver {
-    @RabbitListener(queues = "egg-eclosion")
-    public void receiveMessage(String message) {
-        System.out.println("Received <" + message + ">");
-    }
+//    @RabbitListener(queues = "egg-eclosion")
+//    public void receiveMessage(String message) {
+//        System.out.println("Received <" + message + ">");
+//    }
 
 }

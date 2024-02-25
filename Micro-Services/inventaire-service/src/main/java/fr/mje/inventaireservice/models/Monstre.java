@@ -1,6 +1,13 @@
 package fr.mje.inventaireservice.models;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static fr.mje.inventaireservice.models.Monster.genererMonsterAleatoire;
+
+
+
 @Entity
 @Table(name = "inventaire")
 public class Monstre {
@@ -21,10 +28,23 @@ public class Monstre {
     }
 
     public Monstre(Integer uid) {
-        this.name = "PokemON";
+        List<Monster> Monsters = new ArrayList<>();
+
+        Monsters.add(new Monster("Pikachu", 25, 45, 55, 80));
+        Monsters.add(new Monster("Evoli", 45, 65, 55, 75));
+        Monsters.add(new Monster("Dracaufeu", 55, 75, 65, 100));
+        Monsters.add(new Monster("Miaouss", 30, 50, 45, 70));
+        Monsters.add(new Monster("Salameche", 29, 49, 60, 85));
+        Monsters.add(new Monster("Carapuce", 34, 54, 50, 75));
+        Monsters.add(new Monster("Bulbizarre", 35, 55, 45, 65));
+        Monsters.add(new Monster("Mewtwo", 96, 116, 100, 154));
+
+        Monster MonsterAleatoire = genererMonsterAleatoire(Monsters);
+
+        this.name = MonsterAleatoire.getNom();
         this.uid = uid;
-        this.health = (int)Math.floor(Math.random() * (100 - 10 + 1) + 10);
-        this.damage = (int)Math.floor(Math.random() * (100 - 10 + 1) + 10);
+        this.health = MonsterAleatoire.getPvMin();
+        this.damage = MonsterAleatoire.getDegatsMin();
     }
 
     public Monstre() { }

@@ -10,24 +10,24 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class InventaireServiceApplication {
-
-    static final String topicExchangeName = "incubator-exchange";
-    static final String queueName = "egg-eclosion";
-
-    @Bean
-    Queue queue() {
-        return new Queue(queueName, false);
-    }
-
-    @Bean
-    TopicExchange exchange() {
-        return new TopicExchange(topicExchangeName);
-    }
-
-    @Bean
-    Binding binding(Queue queue, TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with("hatched-egg");
-    }
+//
+//    static final String topicExchangeName = "incubator-exchange";
+//    static final String queueName = "egg-eclosion";
+//
+//    @Bean
+//    Queue queue() {
+//        return new Queue(queueName, false);
+//    }
+//
+//    @Bean
+//    TopicExchange exchange() {
+//        return new TopicExchange(topicExchangeName);
+//    }
+//
+//    @Bean
+//    Binding binding(Queue queue, TopicExchange exchange) {
+//        return BindingBuilder.bind(queue).to(exchange).with("hatched-egg");
+//    }
 
     public static void main(String[] args) {
         SpringApplication.run(InventaireServiceApplication.class, args);
